@@ -1,4 +1,5 @@
-const API_KEY = 'c3669eff0ec6f0500334b9f88cbff5ff'; // Get from ODDSAPI later
+// Use Netlify environment variable
+const API_KEY = process.env.API_KEY;
 
 async function loadGames() {
     try {
@@ -12,7 +13,7 @@ async function loadGames() {
             html += `
                 <div class="game" onclick="loadPlayerProps('${game.id}')">
                     <h3>${game.home_team} vs ${game.away_team}</h3>
-                    <p>Spread: ${game.bookmakers[0].markets[0].outcomes[0].point} @ ${game.bookmakers[0].markets[0].outcomes[0].price}</p>
+                    <p>Spread: ${game.bookmakers[0]?.markets[0]?.outcomes[0]?.point || 'N/A'} @ ${game.bookmakers[0]?.markets[0]?.outcomes[0]?.price || 'N/A'}</p>
                 </div>
             `;
         });
@@ -20,6 +21,7 @@ async function loadGames() {
         document.getElementById('games').innerHTML = html;
     } catch (error) {
         console.error('Error loading games:', error);
+        document.getElementById('games').innerHTML = '<p>Error loading games. Please try again later.</p>';
     }
 }
 
@@ -34,11 +36,11 @@ async function loadPlayerProps(gameId = 'all') {
         
         let html = '<h2>Player Props</h2>';
         props.forEach(prop => {
-            prop.bookmakers[0].markets.forEach(market => {
-                market.outcomes.forEach(outcome => {
+            prop.bookmakers[0]?.markets?.forEach(market => {
+                market.outcomes?.forEach(outcome => {
                     html += `
                         <div class="player-prop">
-                            <p>${outcome.name}: ${outcome.point} @ ${outcome.price}</p>
+                            <p>${outcome.name || 'Unknown'}: ${outcome.point || 'N/A'} @ ${outcome.price || 'N/A'}</p>
                         </div>
                     `;
                 });
@@ -48,8 +50,9 @@ async function loadPlayerProps(gameId = 'all') {
         document.getElementById('games').innerHTML = html;
     } catch (error) {
         console.error('Error loading props:', error);
+        document.getElementById('games').innerHTML = '<p>Error loading player props. Please try again later.</p>';
     }
 }
 
 // Load games when page loads
-loadGames();
+document.addEventListener('DOMContentLoaded', loadGames);
