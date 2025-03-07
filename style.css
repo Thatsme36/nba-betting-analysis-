@@ -1,0 +1,17 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 15px;
+}
+
+.game {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.player-prop {
+    padding: 5px;
+    margin: 5px;
+    background: #f5f5f5;
+}
